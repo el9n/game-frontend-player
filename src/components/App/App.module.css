@@ -1,0 +1,28 @@
+.container {
+  height: 100vh;
+  width: 100vw;
+  display: grid;
+  padding: 20px;
+  gap: 20px;
+  align-items: center;
+  justify-items: center;
+  grid-template-columns: 1fr auto 1fr;
+  box-sizing: border-box;
+  overflow-x: hidden;
+}
+
+.player-bar {
+  display: flex;
+  gap: 10px;
+  flex-direction: column;
+  align-items: stretch;
+  padding: 20px;
+  border-radius: 10px;
+  border: 5px solid #777;
+}
+.player-bar > h1 {
+  margin: 0;
+}
+.player-bar > h1:not(:last-child) {
+  margin-bottom: 10px;
+}

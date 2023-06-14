@@ -1,0 +1,44 @@
+.cell {
+  outline: 2pt solid #777;
+}
+.cell > input {
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  margin: 0;
+  text-align: center;
+  border: none;
+  outline: none;
+  font-size: inherit;
+  aspect-ratio: 1;
+}
+
+.cell.indicator {
+  background: #ddd;
+}
+.cell.indicator > input {
+  color: var(--primaryColor) !important;
+}
+
+.cell.system {
+  user-select: none;
+}
+.cell.system > input {
+  color: #888;
+  background: #444;
+  pointer-events: none;
+}
+
+.cell.captured > input,
+.cell[data-type="base"] > input {
+  background-color: var(--primaryColor);
+  color: var(--secondaryColor);
+}
+.cell[data-type="stronghold"] > input {
+  outline: 5px solid var(--primaryColor);
+  outline-offset: -10px;
+}
+.cell.captured[data-type="stronghold"] > input {
+  outline: 5px solid white;
+  outline-offset: -10px;
+}

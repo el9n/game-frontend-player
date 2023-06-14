@@ -1,0 +1,16 @@
+.field {
+  display: grid;
+  grid-template-columns: repeat(
+    var(--columns),
+    minmax(calc(2ch + 20px), calc(4ch + 20px))
+  );
+  justify-content: center;
+  align-items: center;
+  gap: 2pt;
+  border: 5px solid #777;
+  border-radius: 10px;
+  overflow: hidden;
+  font-size: 1.5em;
+  margin: 0 auto;
+  width: fit-content;
+}
