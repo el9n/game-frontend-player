@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import socketIO from "socket.io-client";
 import GameField from "../GameField/GameField";
+import { Dialog, DialogContent, DialogClose } from "../Dialog";
 import Player from "../Player/Player";
 import classes from "./App.module.css";
 import Questions from "../Questions/Questions";
@@ -16,14 +17,48 @@ function App() {
 
   // локально вычесляемые значения
   const [questions, setQuestions] = useState(null);
+  const [captured, setCaptured] = useState(null);
   const [scores, setScores] = useState(null);
+  const [points, setPoints] = useState(null);
+
+  const [questionPopup, setQuestionPopup] = useState(false);
+  const [chosenQuestion, setChosenQuestion] = useState(-1);
+  const [userAnswer, setUserAnswer] = useState(null);
 
   const parserRef = useRef(null);
-
   const socketRef = useRef(null);
 
   function selectPlayer(letter) {
     socketRef.current.emit("choose_player", letter);
+  }
+
+  function answer() {
+    if (userAnswer !== null) {
+      socketRef.current.emit("answer", {
+        questionIndex: chosenQuestion,
+        answer: userAnswer,
+      });
+      closeQuestionPopup();
+    }
+  }
+
+  function capture(cell) {
+    if (parserRef.current.canCapture(chosenPlayer, cell)) {
+      console.log(cell);
+      socketRef.current.emit("capture", { cell });
+    }
+  }
+
+  function openQuestionPopup(questionIndex) {
+    console.log(allQuestions);
+    setChosenQuestion(questionIndex);
+    setUserAnswer(null);
+    setQuestionPopup(true);
+  }
+  function closeQuestionPopup() {
+    setChosenQuestion(-1);
+    setQuestionPopup(false);
+    setUserAnswer(null);
   }
 
   useEffect(() => {
@@ -59,7 +94,7 @@ function App() {
     };
   }, []);
 
-  // update history parser
+  // обновление парсера истории
   useEffect(() => {
     const updateGame = () => {
       if (gameData && allQuestions) {
@@ -83,7 +118,9 @@ function App() {
 
     if (parserRef.current) {
       setQuestions(parserRef.current.questions);
+      setPoints(parserRef.current.points);
       setScores(parserRef.current.scores);
+      setCaptured(parserRef.current.captured);
     }
   }, [gameData, allQuestions, history]);
 
@@ -92,20 +129,32 @@ function App() {
     return (
       <>
         <div className={classes["container"]}>
+          <Dialog open={questionPopup} onOpenChange={closeQuestionPopup}>
+            <DialogContent>
+              <div className={classes["question-text"]}>
+                {allQuestions[chosenQuestion]?.question}
+              </div>
+              <input
+                className={classes["question-input"]}
+                type="text"
+                onChange={(e) => setUserAnswer(e.target.value)}
+              />
+              <div className={classes["buttons-panel"]}>
+                <button onClick={closeQuestionPopup}>Отменить</button>
+                <button onClick={answer}>Ответить</button>
+              </div>
+            </DialogContent>
+          </Dialog>
           <div>
             {questions && (
-              <Questions
-                questions={questions}
-                onAnswer={(questionIndex, answer) =>
-                  socketRef.current.emit("answer", {
-                    questionIndex,
-                    answer,
-                  })
-                }
-              />
+              <Questions questions={questions} onAnswer={openQuestionPopup} />
             )}
           </div>
-          <GameField options={gameData}></GameField>
+          <GameField
+            options={gameData}
+            captured={captured}
+            onCellClick={capture}
+          ></GameField>
           <div className={classes["player-bar"]}>
             <h1>Игроки</h1>
             {connectedPlayers.map((player) => (
@@ -113,7 +162,7 @@ function App() {
                 short
                 key={player.letter}
                 letter={player.letter}
-                stats={scores[player.letter]}
+                stats={`${scores[player.letter]} [${points[player.letter]}]`}
                 name={player.name}
                 color={player.color}
               />

@@ -31,6 +31,7 @@ function GameField({
   onCellClick,
   onValueChange,
 }) {
+  console.log(captured);
   const zeroCell = (
     <Cell
       indicator
@@ -98,12 +99,17 @@ function GameField({
               cellOptions.color =
                 playerColors[cellOptions[Object.keys(cellOptions)[0]]];
             }
+            if (String(index) in captured) {
+              cellOptions.color = playerColors[captured[String(index)]];
+              cellOptions.captured = captured[String(index)];
+            }
 
             return (
               <Cell
                 key={"cell" + index}
                 index={index}
                 color={cellOptions.color}
+                captured={showCaptured && cellOptions.captured}
                 base={showBases && cellOptions.base}
                 stronghold={showStrongholds && cellOptions.stronghold}
                 editable={editable}

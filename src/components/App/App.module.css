@@ -26,3 +26,48 @@
 .player-bar > h1:not(:last-child) {
   margin-bottom: 10px;
 }
+
+:global(.dialog-overlay) {
+  backdrop-filter: blur(3px);
+  background: rgba(0, 0, 0, 0.4);
+  display: grid;
+  place-items: center;
+}
+:global(.dialog) {
+  margin: 15px;
+  background-color: #212121;
+  padding: 15px;
+  border-radius: 10px;
+  outline: 5px solid #777;
+}
+
+.question-text {
+  text-align: center;
+  width: 100%;
+  font-size: 1.5em;
+  padding: 10px;
+  box-sizing: border-box;
+}
+.question-input {
+  width: -webkit-fill-available;
+  margin: 20px;
+  box-sizing: border-box;
+  padding: 10px;
+  border-radius: 10px;
+  background-color: #212121;
+  border: 3px solid #888;
+}
+.buttons-panel {
+  display: flex;
+  justify-content: space-evenly;
+  margin-top: 15px;
+  gap: 10px;
+}
+.buttons-panel > button {
+  border: 3px solid #888;
+  padding: 5px 10px;
+  border-radius: 10px;
+  font-size: 1.5em;
+  cursor: pointer;
+  background-color: #333;
+}

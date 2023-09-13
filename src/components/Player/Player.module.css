@@ -24,3 +24,7 @@ input.name {
 div.name {
   margin: 0 auto;
 }
+
+.stats {
+  white-space: pre;
+}
