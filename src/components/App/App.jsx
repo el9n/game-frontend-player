@@ -183,8 +183,8 @@ function App() {
     );
 
     return (
-      <div>
-        Доступные:
+      <div style={{  padding: '5%' }}>
+        <p style={{ fontSize: '25px' }}> Доступные команды: </p>
         {avalivablePlayers.map((player) => (
           <Player
             short
